@@ -1,0 +1,84 @@
+{
+  "name": "auto-explicit-function-return-type",
+  "displayName": "auto-explicit-function-return-type",
+  "description": "auto fix explicit-function-return-type",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "auto-explicit-function-return-type.inferFuncReturnTypes",
+        "title": "Infer Func Return Types"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Auto fix explicit-function-return-type",
+      "properties": {
+        "AutoFixReturnType.scope": {
+          "type": "string",
+          "enum": [
+            "file",
+            "func"
+          ],
+          "default": "func",
+          "description": "Determines the scope of the return type inference: 'file' for the whole file, 'func' for the function under the cursor."
+        },
+        "AutoFixReturnType.supportedFunctionTypes": {
+          "type": "array",
+          "description": "Specifies the function types to support",
+          "items": {
+            "type": "string",
+            "enum": [
+              "isFunctionDeclaration",
+              "isFunctionExpression",
+              "isArrowFunction",
+              "isMethodDeclaration",
+              "isGetAccessorDeclaration"
+            ]
+          },
+          "default": [
+            "isFunctionDeclaration",
+            "isFunctionExpression",
+            "isArrowFunction",
+            "isMethodDeclaration",
+            "isGetAccessorDeclaration"
+          ]
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "auto-explicit-function-return-type.inferFuncReturnTypes",
+        "key": "ctrl+alt+i",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.93.0",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "eslint": "^9.9.1",
+    "typescript": "^5.5.4",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
