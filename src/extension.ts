@@ -59,9 +59,9 @@ async function applyEdits(document: vscode.TextDocument, edits: vscode.TextEdit[
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	const disposable = vscode.commands.registerCommand('auto-explicit-function-return-type.inferFuncReturnTypes', async () => {
+	const disposable = vscode.commands.registerCommand('typescript-return-type-inference-plugin.inferFuncReturnTypes', async () => {
 		const editor = vscode.window.activeTextEditor;
-		const configuration = vscode.workspace.getConfiguration('AutoFixReturnType');
+		const configuration = vscode.workspace.getConfiguration('ReturnTypeInference');
 		const scope = configuration.get<Scope>('scope', Scope.FUNC);
 		const supports = Array.from(new Set(configuration.get<Support[]>('supportedFunctionTypes', [])));
 
@@ -106,9 +106,8 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const configChangeDisposable = vscode.workspace.onDidChangeConfiguration(event => {
-		if (event.affectsConfiguration('AutoFixReturnType.supportedFunctionTypes')) {
-			console.log('affectsConfiguration');
-			const configuration = vscode.workspace.getConfiguration('AutoFixReturnType');
+		if (event.affectsConfiguration('ReturnTypeInference.supportedFunctionTypes')) {
+			const configuration = vscode.workspace.getConfiguration('ReturnTypeInference');
 			const oSupports = configuration.get<Support[]>('supportedFunctionTypes', []);
 			const distinctSupports = Array.from(new Set(oSupports));
 			if(distinctSupports.length !== oSupports.length){

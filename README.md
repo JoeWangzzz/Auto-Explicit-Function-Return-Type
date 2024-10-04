@@ -1,71 +1,86 @@
-# auto-explicit-function-return-type README
+# TypeScript Return Type Inference Plugin
 
-This is the README for your extension "auto-explicit-function-return-type". After writing up a brief description, we recommend including the following sections.
+This VSCode plugin automatically infers and adds return types for TypeScript functions that do not have an explicitly declared return type. The plugin is especially helpful for developers working with the `typescript-eslint` rule `@typescript-eslint/explicit-function-return-type`, which requires all functions to have a defined return type.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Automatically infers and adds return types to functions without them.
+- Supports different function types: `FunctionDeclaration`, `FunctionExpression`, `ArrowFunction`, `MethodDeclaration`, and `GetAccessorDeclaration`.
+- Can operate on the entire file or just the function under the cursor, based on the configuration.
+- Helps users resolve linting errors and warnings related to the `@typescript-eslint/explicit-function-return-type` rule.
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+To install the plugin, follow these steps:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Open VSCode and navigate to the Extensions tab.
+2. Search for "TypeScript Return Type Inference Plugin."
+3. Click "Install."
 
-## Requirements
+Alternatively, you can install it from the command line:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+```bash
+code --install-extension typescript-return-type-inference-plugin
+```
 
-## Extension Settings
+## Usage
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Once the plugin is installed:
 
-For example:
+1. Open any TypeScript file in your workspace.
+2. When you encounter a function without an explicit return type, trigger the plugin:
+   - **File Mode:** If the scope is set to 'file,' the plugin will automatically add return types to all functions in the file that lack them.
+   - **Function Mode:** If the scope is set to 'func,' it will add the return type only to the function where the cursor is currently positioned.
+   
+You can configure the scope in your workspace settings or use the default behavior.
 
-This extension contributes the following settings:
+The default shortcut is ctrl+alt+i, you can change it through `typescript-return-type-inference-plugin.inferFuncReturnTypes`
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+## Configuration Options
 
-## Known Issues
+- **scope**: Defines whether the plugin should work on the entire file or just the function under the cursor. 
+  - Values: `'file' | 'func'`
+  
+- **supportedFunctionTypes**: Specifies which function types the plugin should infer return types for.
+  - Values: `'isFunctionDeclaration' | 'isFunctionExpression' | 'ArrowFunction' | 'isMethodDeclaration' | 'isGetAccessorDeclaration'`
+  
+## Example
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Consider the following TypeScript code without explicit return types:
 
-## Release Notes
+```typescript
+function add(a: number, b: number) {
+  return a + b;
+}
 
-Users appreciate release notes as you update your extension.
+const subtract = (a: number, b: number) => a - b;
+```
 
-### 1.0.0
+After running the plugin, the return types will be automatically added:
+```typescript
+function add(a: number, b: number): number {
+  return a + b;
+}
 
-Initial release of ...
+const subtract = (a: number, b: number): number => a - b;
+```
 
-### 1.0.1
+## Resolving `typescript-eslint` Warnings and Errors
 
-Fixed issue #.
+This plugin is designed to assist developers who encounter warnings and errors from `@typescript-eslint/explicit-function-return-type`. When applied, it automatically fixes these issues by inferring and adding the correct return types to your functions.
 
-### 1.1.0
+## Contributing
 
-Added features X, Y, and Z.
+If you'd like to contribute to this plugin, feel free to report issues.
 
----
+GitHub Repository: https://github.com/JoeWangzzz/TypeScript-Return-Type-Inference-Plugin
 
-## Following extension guidelines
+## Discussion
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+The decision not to support a fixer for `explicit-function-return-type` in `typescript-eslint` has been discussed in the community. https://github.com/typescript-eslint/typescript-eslint/issues/59
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+Nonetheless, I believe that providing an automatic fixer for `explicit-function-return-type` is necessary. This plugin fills this gap, helping developers enhance their productivity, reduce the manual effort of adding return types, and decrease linting warnings or errors due to missing return types, thus improving type safety in TypeScript code.
 
-## Working with Markdown
+## License
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+MIT License

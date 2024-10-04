@@ -1,8 +1,13 @@
 {
-  "name": "auto-explicit-function-return-type",
-  "displayName": "auto-explicit-function-return-type",
+  "name": "typescript-return-type-inference-plugin",
+  "displayName": "typescript-return-type-inference-plugin",
   "description": "auto fix explicit-function-return-type",
   "version": "0.0.1",
+  "publisher": "joewangzzz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoeWangzzz/TypeScript-Return-Type-Inference-Plugin.git"
+  },
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -14,15 +19,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "auto-explicit-function-return-type.inferFuncReturnTypes",
+        "command": "typescript-return-type-inference-plugin.inferFuncReturnTypes",
         "title": "Infer Func Return Types"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Auto fix explicit-function-return-type",
+      "title": "TypeScript Return Type Inference Plugin",
       "properties": {
-        "AutoFixReturnType.scope": {
+        "ReturnTypeInference.scope": {
           "type": "string",
           "enum": [
             "file",
@@ -31,7 +36,7 @@
           "default": "func",
           "description": "Determines the scope of the return type inference: 'file' for the whole file, 'func' for the function under the cursor."
         },
-        "AutoFixReturnType.supportedFunctionTypes": {
+        "ReturnTypeInference.supportedFunctionTypes": {
           "type": "array",
           "description": "Specifies the function types to support",
           "items": {
@@ -56,7 +61,7 @@
     },
     "keybindings": [
       {
-        "command": "auto-explicit-function-return-type.inferFuncReturnTypes",
+        "command": "typescript-return-type-inference-plugin.inferFuncReturnTypes",
         "key": "ctrl+alt+i",
         "when": "editorTextFocus"
       }
