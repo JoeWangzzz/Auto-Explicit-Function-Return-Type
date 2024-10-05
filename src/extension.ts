@@ -16,6 +16,47 @@ enum Support {
 	GetAccessorDeclaration = 'isGetAccessorDeclaration'
 }
 
+async function loadLibSources() {
+	const compilerApiPromise = await import("typescript");;
+	const api = { ...await compilerApiPromise as any };
+
+	const cachedSourceFiles: any = [];
+	const libFiles = require("./typescript/index.js");
+
+	for (const sourceFile of getLibSourceFiles()) {
+		cachedSourceFiles[sourceFile.fileName] = sourceFile;
+	}
+
+	return cachedSourceFiles;
+
+	function getLibSourceFiles() {
+		return Object.keys(libFiles)
+			.map((key) => (libFiles as any)[key] as { fileName: string; text: string })
+			.map((libFile) =>
+				api.createSourceFile(libFile.fileName, libFile.text, api.ScriptTarget.Latest, false, api.ScriptKind.TS)
+			);
+	}
+}
+
+
+async function buildHost(options: ts.CompilerOptions) {
+	const host = ts.createCompilerHost(options);
+	const libSource = await loadLibSources();
+	const originalGetSourceFile = host.getSourceFile;
+	host.getDefaultLibLocation = () => {
+		return "/";
+	};
+	host.getSourceFile = (fileName, languageVersion, onError) => {
+		console.log("load: ", fileName);
+		if (libSource[fileName]) {
+			return libSource[fileName];
+		}
+		return originalGetSourceFile.call(host, fileName, languageVersion, onError);
+	};
+	return host;
+}
+
+
 
 
 function getVsCodeEditByNodeToReturnType(node: ts.Node, checker: ts.TypeChecker, document: vscode.TextDocument, supports: Support[], otherPredicte: (node: ts.Node) => boolean): vscode.TextEdit | null {
@@ -30,6 +71,7 @@ function getVsCodeEditByNodeToReturnType(node: ts.Node, checker: ts.TypeChecker,
 			return null;
 		}
 		const typeString = checker.typeToString(type);
+		console.log('return infer ', 'getVsCodeEditByNodeToReturnType ', typeString, signature);
 
 		const closingParen = declaration.parameters.end + 1;
 		const position = document.positionAt(closingParen);
@@ -74,10 +116,22 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		const options = {
+			target: ts.ScriptTarget.ES2022,
+			lib: ["lib.es2022.d.ts"],
+		};
 		const document = editor.document;
-		const program = ts.createProgram([document.fileName], {});
+		const host = await buildHost(options);
+		const program = ts.createProgram([document.fileName], options, host);
+		console.log('return infer', program.getCompilerOptions().lib);
 		const checker = program.getTypeChecker();
 		const sourceFile = program.getSourceFile(document.fileName);
+
+		const sourceFiles = program.getSourceFiles();
+		sourceFiles.forEach(sourceFile => {
+			console.log("Source File:", sourceFile.fileName);
+		});
+
 		const position = editor.selection.active;
 
 
@@ -110,7 +164,7 @@ export function activate(context: vscode.ExtensionContext) {
 			const configuration = vscode.workspace.getConfiguration('ReturnTypeInference');
 			const oSupports = configuration.get<Support[]>('supportedFunctionTypes', []);
 			const distinctSupports = Array.from(new Set(oSupports));
-			if(distinctSupports.length !== oSupports.length){
+			if (distinctSupports.length !== oSupports.length) {
 				vscode.window.showWarningMessage('You set repeat SupportedFunctionTypes.Please check');
 			}
 		}

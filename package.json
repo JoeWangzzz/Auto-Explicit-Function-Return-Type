@@ -2,7 +2,7 @@
   "name": "typescript-return-type-inference-plugin",
   "displayName": "typescript-return-type-inference-plugin",
   "description": "auto fix explicit-function-return-type",
-  "version": "0.0.1",
+  "version": "0.0.10",
   "publisher": "joewangzzz",
   "repository": {
     "type": "git",
@@ -14,7 +14,9 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:typescript"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -74,6 +76,9 @@
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src",
     "test": "vscode-test"
+  },
+  "dependencies": {
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@types/vscode": "^1.93.0",

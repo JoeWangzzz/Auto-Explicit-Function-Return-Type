@@ -7,3 +7,18 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+
+## [0.0.10] - 2024-10-06
+### Fixed
+- Fixed eslib load incorrectly
+
+### Added
+- Added eslib in output 
+
+
+## [0.0.2] - 2024-10-05
+### Fixed
+- Fixed command not fount by adding activationEvents
+
+## [0.0.1] - 2024-10-04
+- Initial release of TypeScript Return Type Inference Plugin.
